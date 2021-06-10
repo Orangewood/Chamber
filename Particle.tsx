@@ -43,7 +43,7 @@ export class Chamber {
     let currentArray = Chamber.initalArray;
 
     //Regex that converts string to "X","." output
-    function outPutArray(array: string[]) {
+    function outputArray(array: string[]) {
       let convertToString = array.map((a) => a.replace(/[LR]/g, "X")).join("");
       positionOutput.push(convertToString);
     }
@@ -63,7 +63,7 @@ export class Chamber {
     function shiftArray(input: string[], speed: number) {
       leftPositionalArray = leftPositionalArray
         .map((a) => a - speed)
-        .filter((a) => a >= 0 && a < input.length);
+        .filter((a) => a >= 0);
       rightPositionalArray = rightPositionalArray
         .map((a) => a + speed)
         .filter((a) => a < input.length);
@@ -85,17 +85,19 @@ export class Chamber {
       currentArray = [];
       currentArray = resetArray;
     }
-    //Main loop for each interval of time, applys all functions
+    //Main loop for each interval of time, applies all functions
     for (var i = 0; i < determineTime(Chamber.initalArray); i++) {
       if (i === 0) {
         setPositionalArray(currentArray);
       }
       updateArray(currentArray);
-      outPutArray(currentArray);
+      outputArray(currentArray);
       shiftArray(currentArray, speed);
+      if (currentArray.every((a) => a === ".")) {
+        break;
+      }
       replaceArray(currentArray);
     }
-    //console.log(positionOutput) for visuals!
     return positionOutput;
   }
 }

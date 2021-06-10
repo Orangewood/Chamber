@@ -1,13 +1,18 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+var __spreadArray = (this && this.__spreadArray) || function (to, from) {
+    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
+        to[j] = from[i];
+    return to;
+};
+exports.__esModule = true;
 exports.Chamber = void 0;
-class Chamber {
-    constructor(initialPosition) {
+var Chamber = /** @class */ (function () {
+    function Chamber(initialPosition) {
         this.init = initialPosition;
         Chamber.validCharacters = ["L", "R", "."];
         Chamber.initalArray = initialPosition.split("");
         for (var i = 0; i < Chamber.initalArray.length; i++) {
-            if (!Chamber.validCharacters.some((a) => a === Chamber.initalArray[i])) {
+            if (!Chamber.validCharacters.some(function (a) { return a === Chamber.initalArray[i]; })) {
                 throw new Error("Invalid character detected");
             }
         }
@@ -15,28 +20,28 @@ class Chamber {
             throw new Error("Invalid string length");
         }
     }
-    animate(speed) {
+    Chamber.prototype.animate = function (speed) {
         if (speed < 1 || speed > 10 || !speed) {
             throw new Error("Invalid speed value");
         }
         //Function assumes maximum iterations - intended
         function determineTime(array) {
             for (var i = 0; i < array.length; i++) {
-                if (array.some((a) => a === "L") || array.some((a) => a === "R")) {
+                if (array.some(function (a) { return a === "L"; }) || array.some(function (a) { return a === "R"; })) {
                     return Math.floor(Chamber.initalArray.length / speed + 1);
                 }
                 else
                     return 1;
             }
         }
-        let positionOutput = [];
-        let leftPositionalArray = [];
-        let rightPositionalArray = [];
-        let testArray = Chamber.initalArray;
+        var positionOutput = [];
+        var leftPositionalArray = [];
+        var rightPositionalArray = [];
+        var currentArray = Chamber.initalArray;
         //Regex that converts string to "X","." output
-        function outPutArray(array) {
-            let okay = array.map((a) => a.replace(/[LR]/g, "X")).join("");
-            positionOutput.push(okay);
+        function outputArray(array) {
+            var convertToString = array.map(function (a) { return a.replace(/[LR]/g, "X"); }).join("");
+            positionOutput.push(convertToString);
         }
         //Sets initial array positions
         function setPositionalArray(input) {
@@ -49,16 +54,17 @@ class Chamber {
                 }
             }
         }
-        //Changes positions accoridng to the speed
+        //Changes positions according to the speed,
+        //filters out bad indicies
         function shiftArray(input, speed) {
             leftPositionalArray = leftPositionalArray
-                .map((a) => a - speed)
-                .filter((a) => a >= 0 && a < input.length);
+                .map(function (a) { return a - speed; })
+                .filter(function (a) { return a >= 0; });
             rightPositionalArray = rightPositionalArray
-                .map((a) => a + speed)
-                .filter((a) => a < input.length);
+                .map(function (a) { return a + speed; })
+                .filter(function (a) { return a < input.length; });
         }
-        //Changes the array to the L and R characters 
+        //Changes the array to the L and R characters
         function updateArray(input) {
             for (var j = 0; j < leftPositionalArray.length; j++) {
                 input.splice(leftPositionalArray[j], 1, "L");
@@ -67,26 +73,29 @@ class Chamber {
                 input.splice(rightPositionalArray[j], 1, "R");
             }
         }
-        //Reinstates characters with dot that were evacuated 
+        //Reinstates characters with dot that were evacuated
         function replaceArray(input) {
-            let resetArray = [...new Array(testArray.length)].map((a) => ".");
-            testArray = [];
-            testArray = resetArray;
+            var resetArray = __spreadArray([], new Array(currentArray.length)).map(function () { return "."; });
+            currentArray = [];
+            currentArray = resetArray;
         }
-        //Main loop for each interval of time, applys all functions
+        //Main loop for each interval of time, applies all functions
         for (var i = 0; i < determineTime(Chamber.initalArray); i++) {
             if (i === 0) {
-                setPositionalArray(testArray);
+                setPositionalArray(currentArray);
             }
-            updateArray(testArray);
-            outPutArray(testArray);
-            shiftArray(testArray, speed);
-            replaceArray(testArray);
+            updateArray(currentArray);
+            outputArray(currentArray);
+            shiftArray(currentArray, speed);
+            if (currentArray.every(function (a) { return a === "."; })) {
+                break;
+            }
+            replaceArray(currentArray);
         }
-        //console.log(positionOutput) for visuals!
+        console.log(positionOutput);
         return positionOutput;
-    }
-}
+    };
+    return Chamber;
+}());
 exports.Chamber = Chamber;
-// new Chamber("R...L..R").animate(1);
-//# sourceMappingURL=Particle.js.map
+new Chamber("L......").animate(2);
