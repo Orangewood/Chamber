@@ -79,7 +79,7 @@ export class Chamber {
     }
     //Reinstates characters with dot that were evacuated
     function replaceArray(input: string[]) {
-      let resetArray: string[] = [...new Array(currentArray.length)].map(
+      let resetArray: string[] = [...new Array(input.length)].map(
         () => "."
       );
       currentArray = [];

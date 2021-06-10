@@ -98,4 +98,4 @@ var Chamber = /** @class */ (function () {
     return Chamber;
 }());
 exports.Chamber = Chamber;
-new Chamber("L......").animate(2);
+new Chamber('..L.......R.....L').animate(1);
